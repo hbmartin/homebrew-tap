@@ -1,15 +1,11 @@
 class Libfreenect2Metal < Formula
   desc "Kinect v2 driver with Metal-accelerated depth processing"
   homepage "https://hbmartin.github.io/libfreenect2-metal/"
-  url "https://github.com/hbmartin/libfreenect2-metal/archive/95f5042e014339b99e2b0ed16abc3b43a07a8464.tar.gz"
-  version "0.3.0"
-  sha256 "b23d6a89aedaf2af47bceb27d4dca8d7d7e09a6186ce97ed02a3a1ed00d13e54"
+  url "https://github.com/hbmartin/libfreenect2-metal/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "c182a3fbcd35f928b4959069ff44d93d8de4bc7d4ef6d4d32f5f365710c9d7a6"
   license any_of: ["Apache-2.0", "GPL-2.0-only"]
+  revision 1
   head "https://github.com/hbmartin/libfreenect2-metal.git", branch: "master"
-
-  livecheck do
-    skip "No tagged release has been published"
-  end
 
   depends_on "cmake" => :build
   depends_on "pkgconf" => :build
@@ -19,17 +15,6 @@ class Libfreenect2Metal < Formula
   depends_on :macos
 
   def install
-    # The pinned snapshot exposes private implementation libraries through its
-    # shared CMake target. Keep downstream consumers independent of exact
-    # Homebrew Cellar dependency versions. This is fixed in post-snapshot
-    # upstream sources and can be removed after the next tagged release.
-    config_template = buildpath/"freenect2.cmake.in"
-    if config_template.read.include?('INTERFACE_LINK_LIBRARIES "@LIBRARIES@"')
-      inreplace config_template,
-                'INTERFACE_LINK_LIBRARIES "@LIBRARIES@"',
-                'INTERFACE_LINK_LIBRARIES ""'
-    end
-
     args = %W[
       -DDEPENDS_DIR=false
       -DBUILD_EXAMPLES=OFF
@@ -53,10 +38,6 @@ class Libfreenect2Metal < Formula
 
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
-
-    # The pinned snapshot ships these files but does not install them itself.
-    license_dir = share/"doc/libfreenect2"
-    license_dir.install "APACHE20", "GPL2", "CONTRIB" unless (license_dir/"APACHE20").exist?
   end
 
   test do
