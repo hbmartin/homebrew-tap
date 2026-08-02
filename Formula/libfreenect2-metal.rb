@@ -7,6 +7,11 @@ class Libfreenect2Metal < Formula
   revision 1
   head "https://github.com/hbmartin/libfreenect2-metal.git", branch: "master"
 
+  bottle do
+    root_url "https://github.com/hbmartin/homebrew-tap/releases/download/libfreenect2-metal-0.3.0_1"
+    sha256 cellar: :any, arm64_tahoe: "34ca5dd21f6d836e0a39f87b3e69e4531c2d440f862f89bd1e20bf5f28496f60"
+  end
+
   depends_on "cmake" => :build
   depends_on "pkgconf" => :build
   depends_on xcode: :build
